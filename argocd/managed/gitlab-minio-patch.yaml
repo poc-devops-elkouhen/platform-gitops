@@ -10,6 +10,7 @@ metadata:
 spec:
   project: default
   source:
+    # Depot source GitOps.
     repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
     targetRevision: main
     path: argocd/platform/gitlab-minio-patch
