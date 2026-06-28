@@ -7,6 +7,11 @@ data:
   url: https://argocd.192.168.33.100.nip.io
   dex.config: |
     connectors:
-      - type: mockCallback
-        id: mock
-        name: Mock
+      - type: gitlab
+        id: gitlab
+        name: GitLab
+        config:
+          baseURL: https://gitlab.192.168.33.100.nip.io
+          clientID: $dex.gitlab.clientID
+          clientSecret: $dex.gitlab.clientSecret
+          redirectURI: https://argocd.192.168.33.100.nip.io/api/dex/callback

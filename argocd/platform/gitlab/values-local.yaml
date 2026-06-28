@@ -6,11 +6,10 @@ global:
     enabled: false
   hosts:
     domain: 192.168.33.100.nip.io
-    # Pas de TLS sur ce cluster local (pas de cert-manager) : sans ce flag,
-    # le chart force `https: true` dans gitlab.yml, ce qui marque le cookie
-    # de session "Secure" et le rend impossible à renvoyer en HTTP, faisant
-    # échouer toute requête POST (login compris) avec un 422 CSRF.
-    https: false
+    # TLS est terminé par Traefik Gateway sur le LoadBalancer. GitLab doit
+    # tout de même annoncer son URL publique en https pour OAuth, callbacks
+    # et cookies de session.
+    https: true
   ingress:
     enabled: false
     configureCertmanager: false
@@ -67,6 +66,8 @@ prometheus:
 # gitlab-gitlab-runner-secret effectivement monté par le chart.
 gitlab-runner:
   install: true
+  # Le runner reste in-cluster et parle au webservice GitLab en HTTP interne.
+  # L'URL publique GitLab, elle, est servie en HTTPS par Traefik.
   gitlabUrl: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/
   rbac:
     create: true
