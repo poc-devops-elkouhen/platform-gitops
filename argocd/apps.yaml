@@ -5,13 +5,6 @@ platform:
   registry:
     host: registry.registry.svc.cluster.local:5000
 
-ciTemplate:
-  projectPath: root/ci-templates
-  projectName: ci-templates
-  sourceDir: ../ci-templates
-  ref: v0.11.1
-  file: /gitlab-ci.yml
-
 gitlab:
   # Constante de plateforme (même instance GitLab pour toutes les apps/services) --
   # un seul endroit, plutôt qu'un champ dupliqué par app comme avant.
