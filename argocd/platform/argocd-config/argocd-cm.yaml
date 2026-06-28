@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  url: http://argocd.192.168.33.100.nip.io
+  dex.config: |
+    connectors:
+      - type: mockCallback
+        id: mock
+        name: Mock
