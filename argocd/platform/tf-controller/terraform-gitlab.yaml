@@ -1,0 +1,27 @@
+apiVersion: infra.contrib.fluxcd.io/v1alpha2
+kind: Terraform
+metadata:
+  name: gitlab-iac
+  namespace: flux-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  interval: 1h
+  approvePlan: auto
+  destroyResourcesOnDeletion: false
+  path: ./terraform
+  sourceRef:
+    kind: GitRepository
+    name: helloworld-iac
+    namespace: flux-system
+  vars:
+    - name: gitlab_url
+      value: "http://gitlab-webservice-default.gitlab.svc:8181"
+  varsFrom:
+    - kind: Secret
+      name: gitlab-tf-credentials
+      varsKeys:
+        - gitlab_token
+  backendConfig:
+    secretSuffix: gitlab-iac
+    inClusterConfig: true

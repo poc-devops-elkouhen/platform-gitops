@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tf-controller
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # Doit syncer après flux-source-controller (CRDs GitRepository disponibles)
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  sources:
+    - repoURL: https://weaveworks.github.io/tf-controller/
+      chart: tf-controller
+      targetRevision: 0.16.0
+      helm:
+        releaseName: tf-controller
+        values: |
+          replicaCount: 1
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 500m
+          runner:
+            resources:
+              requests:
+                memory: 64Mi
+                cpu: 100m
+              limits:
+                memory: 512Mi
+                cpu: 500m
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flux-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

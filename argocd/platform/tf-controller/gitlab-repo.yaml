@@ -1,0 +1,15 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: helloworld-iac
+  namespace: flux-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  interval: 1m
+  url: http://gitlab-webservice-default.gitlab.svc.cluster.local:8181/root/helloworld-iac.git
+  ref:
+    branch: main
+  secretRef:
+    # Secret créé par tf-credentials-creator (username=oauth2, password=<PAT>)
+    name: gitlab-tf-credentials
