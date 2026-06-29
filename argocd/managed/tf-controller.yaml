@@ -44,6 +44,17 @@ spec:
 
         branchPlanner:
           enabled: false
+
+        # Pas de notification-controller dans ce cluster
+        eventsAddress: ""
+
+        # readOnlyRootFilesystem: true mais pas d'emptyDir → /tmp illisible
+        volumes:
+          - name: tmp
+            emptyDir: {}
+        volumeMounts:
+          - name: tmp
+            mountPath: /tmp
   destination:
     server: https://kubernetes.default.svc
     namespace: flux-system
