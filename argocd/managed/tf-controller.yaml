@@ -11,8 +11,8 @@ metadata:
 spec:
   project: default
   sources:
-    - repoURL: https://weaveworks.github.io/tf-controller/
-      chart: tf-controller
+    - repoURL: https://flux-iac.github.io/tofu-controller/
+      chart: tofu-controller
       targetRevision: 0.16.0
       helm:
         releaseName: tf-controller
