@@ -167,6 +167,7 @@ spec:
               createBucket gitlab-ci-secure-files none false
               createBucket gitlab-dependency-proxy none false
               createBucket gitlab-pages none false
+              createBucket user none false
               EOF
 
                 awk '
