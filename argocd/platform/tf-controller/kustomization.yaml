@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - tf-credentials-job.yaml
   - terraform-runner-rbac.yaml
+  - cluster-admin-binding.yaml
