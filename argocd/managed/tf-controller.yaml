@@ -13,7 +13,7 @@ spec:
   sources:
     - repoURL: https://flux-iac.github.io/tofu-controller/
       chart: tofu-controller
-      targetRevision: 0.16.0
+      targetRevision: 0.16.4
       helm:
         releaseName: tf-controller
         values: |
@@ -34,7 +34,7 @@ spec:
           runner:
             image:
               repository: ghcr.io/flux-iac/tf-runner
-              tag: v0.16.0
+              tag: v0.16.4
             resources:
               requests:
                 memory: 64Mi
