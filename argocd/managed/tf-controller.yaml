@@ -26,15 +26,15 @@ spec:
               memory: 256Mi
               cpu: 500m
 
-          # Désactive le source-controller embarqué : on utilise celui de flux2
-          sourceController:
-            deploy: false
+          # Désactive le package AWS (activé par défaut, crée un OCIRepository
+          # vers ghcr.io/flux-iac/aws-primitive-modules inaccessible depuis ce cluster)
+          awsPackage:
+            install: false
 
-          # Image runner explicite : évite la résolution via OCIRepository
           runner:
             image:
-              repository: ghcr.io/flux-iac/tofu-runner
-              tag: v1.6.2
+              repository: ghcr.io/flux-iac/tf-runner
+              tag: v0.16.0
             resources:
               requests:
                 memory: 64Mi
@@ -43,7 +43,6 @@ spec:
                 memory: 512Mi
                 cpu: 500m
 
-          # Branch planner non requis pour ce POC
           branchPlanner:
             enabled: false
   destination:
