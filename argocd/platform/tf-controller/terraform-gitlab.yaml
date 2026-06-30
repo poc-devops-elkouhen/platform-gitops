@@ -27,15 +27,13 @@ spec:
     inClusterConfig: true
   runnerPodTemplate:
     spec:
-      containers:
-        - name: tf-runner
-          env:
-            - name: SSL_CERT_FILE
-              value: /etc/ssl/extra/zscaler-root-ca.pem
-          volumeMounts:
-            - name: zscaler-ca
-              mountPath: /etc/ssl/extra
-              readOnly: true
+      env:
+        - name: SSL_CERT_FILE
+          value: /etc/ssl/extra/zscaler-root-ca.pem
+      volumeMounts:
+        - name: zscaler-ca
+          mountPath: /etc/ssl/extra
+          readOnly: true
       volumes:
         - name: zscaler-ca
           configMap:
