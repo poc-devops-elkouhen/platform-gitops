@@ -5,6 +5,8 @@ services:
   - helloworld-gui
 manifests:
   path: k8s
-  sourceURL: 'https://gitlab.192.168.33.100.nip.io/root/helloworld-iac'
+  projectPath: infra/helloworld-iac
+  sourceURL: 'https://gitlab.192.168.33.100.nip.io/infra/helloworld-iac'
 code:
-  sourceURL: 'https://gitlab.192.168.33.100.nip.io/root/helloworld'
+  projectPath: infra/helloworld
+  sourceURL: 'https://gitlab.192.168.33.100.nip.io/infra/helloworld'
