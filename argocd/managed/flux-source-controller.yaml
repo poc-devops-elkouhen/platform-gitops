@@ -12,7 +12,7 @@ spec:
   sources:
     - repoURL: https://fluxcd-community.github.io/helm-charts
       chart: flux2
-      targetRevision: 2.13.0
+      targetRevision: 2.14.0
       helm:
         releaseName: flux2
         values: |
@@ -44,3 +44,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true
