@@ -12,7 +12,13 @@ onboard-apps:
   stage: onboard
   image: python:3.12-slim
   rules:
-    - changes:
+    # CI_JOB_TOKEN est en lecture seule sur les pipelines de MR (protection
+    # anti-privilege-escalation) : le job ne peut pousser sur main que sur le
+    # pipeline de branche declenche apres le merge, pas sur celui de la MR.
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      changes:
         - argocd/apps/**/*
   variables:
     GIT_STRATEGY: clone
