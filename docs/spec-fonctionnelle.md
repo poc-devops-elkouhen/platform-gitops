@@ -28,13 +28,17 @@ application restent dans son dossier dédié.
 
 L'onboarding applicatif ajoute un dossier `argocd/apps/<app>/` qui regroupe
 toute la configuration GitOps dédiée à l'application : métadonnées, AppProject,
-ApplicationSet par environnement et éventuels credentials repo. Le reste du
-seed applicatif reste porté par `toolbox`/les outils de seed pour créer les
-projets GitLab et les dépôts `*-iac`.
+ApplicationSet par environnement et éventuels credentials repo.
+
+La création des projets GitLab et des dépôts `*-iac` n'est plus portée par
+`toolbox`. Elle est déclarée dans le dépôt `gitlab-projects-iac` et appliquée
+par le `Terraform/gitlab-iac` exécuté par tf-controller.
 
 ## Promotion des applications
 
 Les branches d'environnement (`dev`, `rec`, `preprod`) du dépôt manifests
 (`*-iac`) sont mises à jour par la CI applicative via `deploy.py`. Ce dépôt ne
 porte pas la logique de promotion ; il déclare seulement, dans
-`argocd/apps/<app>/`, les branches applicatives suivies par ArgoCD.
+`argocd/apps/<app>/`, les branches applicatives suivies par ArgoCD. Le contenu
+des dépôts applicatifs et les variables nécessaires aux pipelines doivent être
+initialisés par les jobs CI/CD applicatifs prévus pour cela.
