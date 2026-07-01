@@ -17,8 +17,8 @@ Le dépôt doit fournir :
 - les Applications et ApplicationSets ArgoCD nécessaires aux composants
   plateforme ;
 - les manifests des composants plateforme (routes, config ArgoCD, registry) ;
-- un dossier `argocd/apps/<app>/` par application pour sa configuration GitOps
-  dédiée ;
+- aucun dossier applicatif au provisioning initial ;
+- un dossier `argocd/apps/<app>/` par application après onboarding ;
 - les secrets plateforme chiffrés nécessaires aux contrôleurs GitOps.
 
 ## Utilisateurs cibles
@@ -38,8 +38,8 @@ Le dépôt doit fournir :
   manuelle ni détail propre à une application.
 - Les composants plateforme (GitLab, registry, ArgoCD config) sont déclarés dans
   `argocd/platform/` et synchronisés par ArgoCD.
-- Les ressources propres aux applications sont regroupées sous
-  `argocd/apps/<app>/`.
+- Les ressources propres aux applications sont absentes au provisioning initial,
+  puis générées sous `argocd/generated/apps/<app>/` après onboarding.
 
 ## Non-objectifs
 

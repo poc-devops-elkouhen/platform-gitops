@@ -6,25 +6,25 @@ metadata:
 spec:
   goTemplate: true
   goTemplateOptions:
-    - missingkey=error
+  - missingkey=error
   generators:
-    - git:
-        repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
-        revision: main
-        directories:
-          - path: argocd/apps/*
+  - git:
+      repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
+      revision: main
+      directories:
+      - path: argocd/generated/apps/*
   template:
     metadata:
-      name: "app-config-{{ .path.basename }}"
+      name: app-config-{{ .path.basename }}
       namespace: argocd
       finalizers:
-        - resources-finalizer.argocd.argoproj.io
+      - resources-finalizer.argocd.argoproj.io
     spec:
       project: default
       source:
         repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
         targetRevision: main
-        path: "{{ .path.path }}"
+        path: '{{ .path.path }}'
       destination:
         server: https://kubernetes.default.svc
         namespace: argocd
@@ -33,4 +33,4 @@ spec:
           prune: true
           selfHeal: true
         syncOptions:
-          - CreateNamespace=true
+        - CreateNamespace=true
