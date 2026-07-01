@@ -31,7 +31,10 @@ onboard-apps:
       if [ -n "$(git status --porcelain -- argocd/generated argocd/managed)" ]; then
         git add argocd/generated argocd/managed
         git commit -m "chore(argocd): regenerate app manifests [bot]"
-        git remote set-url origin "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git"
+        # ${CI_SERVER_HOST} est l'URL externe (gitlab.192.168.33.100.nip.io),
+        # TLS self-signed non approuvé par le conteneur du job : on pousse via
+        # l'URL in-cluster HTTP, comme le clone_url du runner (values-local.yaml).
+        git remote set-url origin "http://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab-webservice-default.gitlab.svc.cluster.local:8181/${CI_PROJECT_PATH}.git"
         git push origin HEAD:main
       else
         echo "Rien a regenerer cote platform-gitops."
