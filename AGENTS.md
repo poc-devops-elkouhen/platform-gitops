@@ -16,7 +16,7 @@ séparément de la plateforme.
 
 ```
 argocd/
-  apps.yaml              Métadonnées globales de la plateforme (domaine, registry)
+  apps.yaml              Métadonnées globales de la plateforme (domaine, registre GHCR)
   apps/
     <app>/               Configuration GitOps dédiée à une application
       app.yaml           Description source de l'application
@@ -24,17 +24,25 @@ argocd/
     apps/<app>/          Manifests ArgoCD générés depuis app.yaml
   managed/               Fichiers GÉNÉRÉS — ne pas éditer à la main
     apps-appset.yaml     ApplicationSet générique qui pointe vers argocd/generated/apps/*
-    gitlab.yaml          Application ArgoCD pour GitLab
+    gitlab.yaml          Application ArgoCD pour GitLab (chart Helm)
     platform-appset.yaml ApplicationSet pour les composants plateforme
     terraform-gitlab.yaml Application ArgoCD pour le contrôleur Terraform GitLab
+    flux-source-controller.yaml Application ArgoCD pour le source-controller Flux
+    tf-controller.yaml   Application ArgoCD pour le tofu-controller
+    tf-crds.yaml         Application ArgoCD pour les CRDs Terraform
   platform/              Manifests des composants plateforme
     argocd-config/       ConfigMaps ArgoCD (RBAC, SSO Dex, paramètres)
     argocd-ui/           Routes HTTP ArgoCD et Dex
+    gitlab/              Values Helm GitLab
     gitlab-routes/       Routes HTTP GitLab
     gitlab-minio-patch/  Patch Minio pour GitLab
-    registry/            Déploiement du registry Docker interne
+    tf-controller/       Manifests du tofu-controller (exécute Terraform depuis Git)
+    tf-crds/             CRDs Terraform consommées par tf-controller
 flux-secrets/            Secrets Kubernetes chiffrés avec SOPS/age et appliqués par Flux
 ```
+
+Il n'y a pas de registry Docker interne au cluster : les images applicatives
+sont poussées sur GHCR (détail dans `docs/spec-fonctionnelle.md`).
 
 ## Règles critiques
 
@@ -71,25 +79,11 @@ bootstrap, développé ensuite sur GitLab, et mirroré en continu vers GitHub
 (`gitlab_project_mirror.platform_gitops_to_github`) — GitHub reste le dépôt
 canonique surveillé par ArgoCD/Flux, sans changement de configuration.
 
-Le merge de la MR déclenche directement (sans délai) le pipeline
-`.gitlab-ci.yml` de ce projet sur le runner interne, qui :
-1. régénère `argocd/generated/apps/<app>/*` et `argocd/managed/apps-appset.yaml`
-   (via `platform-cicd/scripts/render-argocd-apps.py`) et les commit sur ce
-   même projet GitLab (le push mirror propage ensuite vers GitHub) ;
-2. régénère `gitlab-projects-iac/terraform/apps.auto.tfvars.json` (via
-   `toolbox/scripts/render-gitlab-projects.py`) et le commit directement sur
-   GitHub (`gitlab-projects-iac` n'a pas d'équivalent GitLab) — le `Terraform`
-   `gitlab-iac` (Flux) crée alors les projets GitLab `<app>`/`<app>-iac`, créés
-   **vides** (pas d'import GitHub) puisque le code d'une nouvelle app n'existe
-   pas encore ailleurs ; seules les apps historiques (`importFromGithub: true`,
-   ex. `helloworld`) sont importées depuis un repo GitHub préexistant.
-
+Le merge de la MR déclenche automatiquement la régénération des manifests
+ArgoCD et de l'inventaire Terraform `gitlab-projects-iac` : voir le détail
+pas à pas dans [`docs/spec-fonctionnelle.md`](./docs/spec-fonctionnelle.md#flux-donboarding-dune-application).
 Plus besoin de lancer `make argocd-apps-render` à la main ni de toucher
-`gitlab-projects-iac` : une seule MR sur `argocd/apps/` suffit. Le pipeline
-utilise la variable CI/CD groupe `GITHUB_TOKEN` (groupe `infra`, déclarée dans
-`gitlab-projects-iac/terraform/main.tf`, réutilise `var.github_token`) pour
-cloner `platform-cicd`/`toolbox` et pousser vers GitHub, et `CI_JOB_TOKEN` pour
-committer directement sur ce projet GitLab.
+`gitlab-projects-iac` : une seule MR sur `argocd/apps/` suffit.
 
 ## Ce qu'il ne faut pas faire
 

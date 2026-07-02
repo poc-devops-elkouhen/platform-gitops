@@ -5,7 +5,7 @@
 ```
 .gitlab-ci.yml                 Pipeline GitLab : régénère argocd/generated/ et gitlab-projects-iac au merge d'une app
 argocd/
-  apps.yaml                    Métadonnées globales (domaine, registry, repoURL GitOps)
+  apps.yaml                    Métadonnées globales (domaine, registre GHCR, repoURL GitOps)
   apps/                        Descriptions applicatives ajoutées après bootstrap
   generated/apps/              Manifests ArgoCD générés après onboarding app
   managed/                     GÉNÉRÉ — ne pas éditer à la main
@@ -13,12 +13,17 @@ argocd/
     gitlab.yaml                Application ArgoCD pour GitLab (chart Helm)
     platform-appset.yaml       ApplicationSet pour les composants plateforme
     terraform-gitlab.yaml      Application ArgoCD pour le contrôleur Terraform GitLab
+    flux-source-controller.yaml Application ArgoCD pour le source-controller Flux
+    tf-controller.yaml         Application ArgoCD pour le tofu-controller
+    tf-crds.yaml                Application ArgoCD pour les CRDs Terraform
   platform/                    Manifests des composants plateforme
     argocd-config/             Kustomization : argocd-cm, argocd-rbac-cm, argocd-cmd-params-cm
     argocd-ui/                 HTTPRoutes ArgoCD et Dex
+    gitlab/                    Values Helm GitLab (bootstrap)
     gitlab-routes/             HTTPRoutes GitLab
     gitlab-minio-patch/        Patch Kustomize Minio
-    registry/                  Déploiement registry:2 + Service + HTTPRoute
+    tf-controller/             Manifests du tofu-controller
+    tf-crds/                   CRDs Terraform consommées par tf-controller
 docs/
   prd.md
   spec-fonctionnelle.md
@@ -26,6 +31,10 @@ docs/
 flux-secrets/
   github-credentials.yaml     Secret Flux chiffré SOPS pour lire GitHub
 ```
+
+Note : `argocd/apps/test.yaml` et `argocd/generated/apps/test/` sont une app
+de test résiduelle utilisée pour valider le pipeline d'onboarding ; elle ne
+correspond à aucun dépôt applicatif réel.
 
 ## `argocd/apps.yaml` — métadonnées plateforme
 
@@ -37,7 +46,7 @@ platform:
   repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
   targetRevision: main
   registry:
-    host: registry.registry.svc.cluster.local:5000
+    host: ghcr.io/poc-devops-elkouhen
 
 gitlab:
   internalHost: gitlab-webservice-default.gitlab.svc.cluster.local:8181
@@ -132,12 +141,10 @@ make check-generated
 - **`argocd-cmd-params-cm.yaml`** : active `server.insecure=true` pour exposer
   ArgoCD derrière Traefik sans TLS terminé par ArgoCD.
 
-## Registry (`argocd/platform/registry/`)
+## Registre d'images (GHCR)
 
-Déploiement d'un registry `registry:2` (Docker Distribution) sans
-authentification, exposé :
-- **In-cluster** via un `Service ClusterIP` sur le port 5000.
-- **Externe** via une `HTTPRoute` Traefik sur `registry.<domaine>`.
-
-Pas de persistance au-delà du `PersistentVolumeClaim` local-path-provisioner —
-les images sont perdues en cas de destruction du PVC.
+Il n'y a pas de registry Docker déployé dans le cluster. `argocd/apps.yaml`
+déclare `registry.host: ghcr.io/poc-devops-elkouhen` : c'est la valeur
+consommée par `platform_inventory.py` pour construire les références
+d'image des apps. Voir `docs/spec-fonctionnelle.md` pour le flux du secret
+de pull (`ghcr-pull-secret`).

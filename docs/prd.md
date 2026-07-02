@@ -3,9 +3,10 @@
 ## Intention du projet
 
 `platform-gitops` est la source de vérité GitOps du POC. Il centralise l'état
-déclaratif des composants plateforme (GitLab, ArgoCD, registry, contrôleurs
-GitOps) et garde les ressources applicatives dans des dossiers dédiés, séparés
-de la plateforme.
+déclaratif des composants plateforme (GitLab, ArgoCD, contrôleurs GitOps) et
+garde les ressources applicatives dans des dossiers dédiés, séparés de la
+plateforme. Les images applicatives sont poussées sur GHCR, un registre
+externe non géré par ce dépôt.
 
 La vision globale de la chaîne CI/CD est dans
 `../../platform-cicd/docs/prd.md`.
@@ -16,7 +17,7 @@ Le dépôt doit fournir :
 
 - les Applications et ApplicationSets ArgoCD nécessaires aux composants
   plateforme ;
-- les manifests des composants plateforme (routes, config ArgoCD, registry) ;
+- les manifests des composants plateforme (routes, config ArgoCD, GitLab) ;
 - aucun dossier applicatif au provisioning initial ;
 - un dossier `argocd/apps/<app>/` par application après onboarding ;
 - les secrets plateforme chiffrés nécessaires aux contrôleurs GitOps.
@@ -36,7 +37,7 @@ Le dépôt doit fournir :
   intervention manuelle.
 - `argocd/managed/` est entièrement généré et ne contient aucune configuration
   manuelle ni détail propre à une application.
-- Les composants plateforme (GitLab, registry, ArgoCD config) sont déclarés dans
+- Les composants plateforme (GitLab, ArgoCD config) sont déclarés dans
   `argocd/platform/` et synchronisés par ArgoCD.
 - Les ressources propres aux applications sont absentes au provisioning initial,
   puis générées sous `argocd/generated/apps/<app>/` après onboarding.

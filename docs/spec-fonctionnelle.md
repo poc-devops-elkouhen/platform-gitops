@@ -24,9 +24,15 @@ détails d'une application viennent de sa description `argocd/apps/<app>/app.yam
 |---------|---------|
 | `argocd-config/` | `argocd-cm.yaml` (Dex OIDC), `argocd-rbac-cm.yaml`, `argocd-cmd-params-cm.yaml` |
 | `argocd-ui/` | HTTPRoute ArgoCD, HTTPRoute Dex, Service NodePort Dex |
-| `gitlab-routes/` | HTTPRoutes GitLab (UI, registry, SSH) |
+| `gitlab/` | Values Helm GitLab utilisées au bootstrap |
+| `gitlab-routes/` | HTTPRoutes GitLab (UI, SSH) |
 | `gitlab-minio-patch/` | Patch Kustomize pour les buckets Minio GitLab |
-| `registry/` | Déploiement, Service et HTTPRoute du registry Docker |
+| `tf-controller/` | Manifests du tofu-controller (exécute Terraform depuis Git) |
+| `tf-crds/` | CRDs Terraform consommées par tf-controller |
+
+Il n'y a pas de dossier `registry/` : les images applicatives sont poussées
+sur GHCR, pas sur un registry interne au cluster (voir "Registre d'images"
+dans `docs/spec-technique.md`).
 
 ## Flux d'onboarding d'une application
 
