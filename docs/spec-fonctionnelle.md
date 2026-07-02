@@ -16,7 +16,7 @@ plateforme, une fois les projets GitLab provisionnés par Terraform.
 `argocd/managed/` n'est pas une séparation fonctionnelle. C'est une sortie
 générée qui contient les objets ArgoCD d'amorçage. Il peut contenir un
 ApplicationSet générique qui pointe vers `argocd/generated/apps/*`, mais les
-détails d'une application viennent de sa description `argocd/apps/<app>/app.yaml`.
+détails d'une application viennent de sa description `argocd/apps/<app>.yaml`.
 
 ## Composants plateforme (`argocd/platform/`)
 

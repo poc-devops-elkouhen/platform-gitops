@@ -19,7 +19,7 @@ Le dépôt doit fournir :
   plateforme ;
 - les manifests des composants plateforme (routes, config ArgoCD, GitLab) ;
 - aucun dossier applicatif au provisioning initial ;
-- un dossier `argocd/apps/<app>/` par application après onboarding ;
+- un fichier `argocd/apps/<app>.yaml` par application après onboarding ;
 - les secrets plateforme chiffrés nécessaires aux contrôleurs GitOps.
 
 ## Utilisateurs cibles

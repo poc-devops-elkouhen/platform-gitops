@@ -9,7 +9,7 @@ réconcilié automatiquement sur le cluster.
 
 Le provisioning initial de la plateforme doit rester sans application. Les
 ressources liées aux applications (namespaces applicatifs, credentials repo,
-ApplicationSets applicatifs) sont ajoutées ensuite sous `argocd/apps/<app>/`,
+ApplicationSets applicatifs) sont ajoutées ensuite via `argocd/apps/<app>.yaml`,
 séparément de la plateforme.
 
 ## Structure
@@ -18,8 +18,7 @@ séparément de la plateforme.
 argocd/
   apps.yaml              Métadonnées globales de la plateforme (domaine, registre GHCR)
   apps/
-    <app>/               Configuration GitOps dédiée à une application
-      app.yaml           Description source de l'application
+    <app>.yaml           Description source de l'application (fichier plat)
   generated/
     apps/<app>/          Manifests ArgoCD générés depuis app.yaml
   managed/               Fichiers GÉNÉRÉS — ne pas éditer à la main
@@ -51,7 +50,7 @@ sont poussées sur GHCR (détail dans `docs/spec-fonctionnelle.md`).
 - **`argocd/managed/` n'est pas une couche fonctionnelle** : c'est seulement le
   point d'entrée ArgoCD généré. Il peut contenir un ApplicationSet générique
   vers `argocd/generated/apps/*`, mais pas de détails propres à une application.
-- **`argocd/apps/<app>/app.yaml` est la source de vérité applicative**. Les
+- **`argocd/apps/<app>.yaml` est la source de vérité applicative**. Les
   AppProject, ApplicationSet et credentials ArgoCD de l'app sont générés dans
   `argocd/generated/apps/<app>/` via `make argocd-apps-render` depuis
   `platform-cicd`.
@@ -89,7 +88,7 @@ Plus besoin de lancer `make argocd-apps-render` à la main ni de toucher
 
 - Ne pas éditer `argocd/managed/` directement.
 - Ne pas éditer manuellement `argocd/generated/apps/<app>/` ; modifier
-  `argocd/apps/<app>/app.yaml` puis régénérer.
+  `argocd/apps/<app>.yaml` puis régénérer.
 - Ne pas committer de secrets non chiffrés dans ce dépôt.
 - Ne pas ajouter de Job qui fabrique le contenu d'un secret `flux-secrets/*.yaml`
   au runtime : ces secrets restent des manifestes SOPS statiques. En revanche,
