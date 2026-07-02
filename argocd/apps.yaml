@@ -1,9 +1,9 @@
 platform:
   domain: 192.168.33.100.nip.io
-  repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
+  repoURL: https://github.com/k8s-gitops-lab/platform-gitops
   targetRevision: main
   registry:
-    host: ghcr.io/poc-devops-elkouhen
+    host: ghcr.io/k8s-gitops-lab
 
 gitlab:
   # Constante de plateforme (même instance GitLab pour toutes les apps/services) --

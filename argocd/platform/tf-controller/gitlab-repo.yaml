@@ -7,7 +7,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   interval: 1m
-  url: https://github.com/poc-devops-elkouhen/gitlab-projects-iac.git
+  url: https://github.com/k8s-gitops-lab/gitlab-projects-iac.git
   ref:
     branch: main
   secretRef:

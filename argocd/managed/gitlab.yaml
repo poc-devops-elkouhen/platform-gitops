@@ -16,7 +16,7 @@ spec:
           - $values/argocd/platform/gitlab/values-local.yaml
     # Source d'amorcage des values GitLab : GitLab est lui-meme en cours de
     # deploiement a ce stade.
-    - repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
+    - repoURL: https://github.com/k8s-gitops-lab/platform-gitops
       targetRevision: main
       ref: values
   destination:

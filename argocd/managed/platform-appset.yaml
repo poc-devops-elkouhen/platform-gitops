@@ -37,7 +37,7 @@ spec:
       project: default
       source:
         # Depot source GitOps.
-        repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
+        repoURL: https://github.com/k8s-gitops-lab/platform-gitops
         targetRevision: main
         path: "{{ .path }}"
       destination:

@@ -43,10 +43,10 @@ Ce fichier fixe les constantes résolues par `platform_inventory.py` :
 ```yaml
 platform:
   domain: 192.168.33.100.nip.io
-  repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
+  repoURL: https://github.com/k8s-gitops-lab/platform-gitops
   targetRevision: main
   registry:
-    host: ghcr.io/poc-devops-elkouhen
+    host: ghcr.io/k8s-gitops-lab
 
 gitlab:
   internalHost: gitlab-webservice-default.gitlab.svc.cluster.local:8181
@@ -60,7 +60,7 @@ pointer vers l'instance GitLab interne.
 
 Malgré son nom historique, ce fichier ne doit pas devenir un inventaire
 applicatif détaillé. Les ressources d'une application doivent être décrites dans
-`argocd/apps/<app>/app.yaml`.
+`argocd/apps/<app>.yaml`.
 
 ## Secrets GitOps (`flux-secrets/`)
 
@@ -102,14 +102,14 @@ Ce répertoire n'est pas une couche métier distincte de `argocd/platform/` :
 
 Il ne doit pas contenir d'`AppProject`, `Application`, `ApplicationSet`,
 credential ou namespace propre à une application. Ces objets doivent être dans
-`argocd/generated/apps/<app>/` et générés depuis `argocd/apps/<app>/app.yaml`.
+`argocd/generated/apps/<app>/` et générés depuis `argocd/apps/<app>.yaml`.
 
 ## `argocd/apps/<app>.yaml` — description applicative
 
 Le dépôt est livré sans application déclarée pour que le provisioning plateforme
 reste indépendant. Après provisioning, chaque application possède une
 description source, écrite à la main (champs minimums : `name`, `description`,
-`services`) ou via `toolbox init-project.py` :
+`services`) et proposée par pull/merge request directe :
 
 | Fichier | Rôle |
 |---------|------|
@@ -144,7 +144,7 @@ make check-generated
 ## Registre d'images (GHCR)
 
 Il n'y a pas de registry Docker déployé dans le cluster. `argocd/apps.yaml`
-déclare `registry.host: ghcr.io/poc-devops-elkouhen` : c'est la valeur
+déclare `registry.host: ghcr.io/k8s-gitops-lab` : c'est la valeur
 consommée par `platform_inventory.py` pour construire les références
 d'image des apps. Voir `docs/spec-fonctionnelle.md` pour le flux du secret
 de pull (`ghcr-pull-secret`).

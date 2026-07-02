@@ -9,7 +9,7 @@ spec:
   - missingkey=error
   generators:
   - git:
-      repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
+      repoURL: https://github.com/k8s-gitops-lab/platform-gitops
       revision: main
       directories:
       - path: argocd/generated/apps/*
@@ -22,7 +22,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/poc-devops-elkouhen/platform-gitops
+        repoURL: https://github.com/k8s-gitops-lab/platform-gitops
         targetRevision: main
         path: '{{ .path.path }}'
       destination:
